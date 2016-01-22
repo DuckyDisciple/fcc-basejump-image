@@ -3,25 +3,57 @@
 //
 // An API that takes a search term and returns image info, as well as displays recent searches
 //
-var http = require("http");
 var express = require('express');
 var app = express();
 var router = express.Router();
 var request = require('request');
 
+var mongoose = require("mongoose");
+mongoose.connect("mongodb://"+process.env.IP+":27017/imgapi");
+
+var Schema = mongoose.Schema;
+var recentSchema = new Schema({
+  search: String,
+  date: Date
+});
+var Recent = mongoose.model('recent', recentSchema);
+module.exports = Recent;
+
+var MongoClient = require('mongodb');
+
 router.get("/", function(req,res){
   res.sendfile(__dirname+'/client/index.html');
 });
 
-router.get("/recent/", function(req, res) {
-    
+router.get("/recent", function(req, res) {
+    MongoClient.connect("mongodb://"+process.env.IP+":27017/imgapi",function(err,db){
+      if(err) throw err;
+      Recent.find({}, function(err,docs){
+        if(err) throw err;
+        console.log(docs);
+      }).sort({"date":-1}).then(function(docs){
+        var searches = [];
+        for(var i in docs){
+          searches.push({"search": docs[i].search, "date": docs[i].date});
+        }
+        res.send(searches);
+      },function(err){
+        if(err)throw err;
+      });
+      // var cursor = db.collection("recent").find().sort({"date":-1});
+      // cursor.each(function(err, doc){
+      //   if(err) throw err;
+      //   searches.push(doc);
+      // });
+      // res.json({"searches":searches});
+    });
 });
 
 router.get("/search/",function(req, res) {
     var params = req.query;
     if(params.image!==null || params.image!==""){
       var term = params.image;
-      var pg = isNaN(params.page) ? 1 : (params.page - 1)*10 + 1;
+      var pg = isNaN(params.offset) ? 1 : (params.offset - 1)*10 + 1;
       var baseUrl = "https://www.googleapis.com/customsearch/v1?num=10";
       baseUrl += "&q="+term;
       baseUrl += "&start="+pg;
@@ -39,6 +71,19 @@ router.get("/search/",function(req, res) {
           });
           
           //log DB entry
+          var newRecent = Recent({
+            search:term,
+            date:Date.now()
+          });
+          newRecent.save(function(err){
+            if(err) throw err;
+            console.log("Recent search logged");
+          });
+          // MongoClient.connect("mongodb://"+process.env.IP+":27017/imgapi",function(err,db){
+          //   if(err) throw err;
+          //   db.collection("recent").insert({"search":term,"date": Date.now()});
+          //   db.close();
+          // });
           
           res.json(results);
         }else{
