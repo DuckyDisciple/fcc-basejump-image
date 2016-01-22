@@ -1,10 +1,11 @@
 {
-  "name": "chat-example",
-  "version": "0.0.0",
-  "description": "A chat example to showcase how to use `socket.io` with a static `express` server with `async` for control flow.",
+  "name": "fcc-basejump-image",
+  "version": "1.0.0",
+  "description": "An image api with recent searches stored",
   "main": "server.js",
+  "start": "node server.js",
   "repository": "",
-  "author": "Mostafa Eweda <mo.eweda@gmail.com>",
+  "author": "Drew Sartorius",
   "dependencies": {
     "async": "~0.2.8",
     "express": "~4.0.0",
