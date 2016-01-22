@@ -9,7 +9,8 @@
   "repository": "",
   "author": "Drew Sartorius",
   "engines":{
-    "node": "4.1.1"
+    "node": "4.1.1",
+    "npm": "2.14.4"
   },
   "dependencies": {
     "async": "~0.2.8",
