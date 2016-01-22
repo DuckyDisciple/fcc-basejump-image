@@ -9,7 +9,8 @@ var router = express.Router();
 var request = require('request');
 
 var mongoose = require("mongoose");
-mongoose.connect("mongodb://"+process.env.IP+":27017/imgapi");
+var mongouri = process.env.MONGOLAB_URI || "mongodb://"+process.env.IP+":27017/imgapi";
+mongoose.connect(mongouri);
 
 var Schema = mongoose.Schema;
 var recentSchema = new Schema({
