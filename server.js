@@ -7,7 +7,7 @@ var express = require('express');
 var app = express();
 var router = express.Router();
 var request = require('request');
-var timeout = require("connect-timeout");
+// var timeout = require("connect-timeout");
 
 var mongoose = require("mongoose");
 var mongouri = process.env.MONGOLAB_URI || "mongodb://"+process.env.IP+":27017/imgapi";
@@ -98,7 +98,7 @@ router.get("/search/",function(req, res) {
 
 // var home = require('./');
 app.use("/",router);
-app.use(timeout(120000));
+// app.use(timeout(120000));
 
 var server = app.listen(process.env.PORT || 3000, process.env.IP || "0.0.0.0", function(){
   var port = server.address().port;
