@@ -31,7 +31,6 @@ router.get("/recent", function(req, res) {
       if(err) throw err;
       Recent.find({}, function(err,docs){
         if(err) throw err;
-        console.log(docs);
       }).sort({"date":-1}).then(function(docs){
         var searches = [];
         for(var i in docs){
@@ -53,7 +52,7 @@ router.get("/recent", function(req, res) {
 router.get("/search/",function(req, res) {
     var params = req.query;
     if(params.image!==null || params.image!==""){
-      var term = params.image;
+      var term = params.image.split(' ').join('+');
       var pg = isNaN(params.offset) ? 1 : (params.offset - 1)*10 + 1;
       var baseUrl = "https://www.googleapis.com/customsearch/v1?num=10";
       baseUrl += "&q="+term;
