@@ -28,26 +28,23 @@ router.get("/", function(req,res){
 });
 
 router.get("/recent", function(req, res) {
-    MongoClient.connect("mongodb://"+process.env.IP+":27017/imgapi",function(err,db){
+    Recent.find({}, function(err,docs){
       if(err) throw err;
-      Recent.find({}, function(err,docs){
-        if(err) throw err;
-      }).sort({"date":-1}).then(function(docs){
-        var searches = [];
-        for(var i in docs){
-          searches.push({"search": docs[i].search, "date": docs[i].date});
-        }
-        res.send(searches);
-      },function(err){
-        if(err)throw err;
-      });
+    }).sort({"date":-1}).then(function(docs){
+      var searches = [];
+      for(var i in docs){
+        searches.push({"search": docs[i].search, "date": docs[i].date});
+      }
+      res.send(searches);
+    },function(err){
+      if(err)throw err;
+    });
       // var cursor = db.collection("recent").find().sort({"date":-1});
       // cursor.each(function(err, doc){
       //   if(err) throw err;
       //   searches.push(doc);
       // });
       // res.json({"searches":searches});
-    });
 });
 
 router.get("/search/",function(req, res) {
@@ -79,6 +76,7 @@ router.get("/search/",function(req, res) {
           newRecent.save(function(err){
             if(err) throw err;
             console.log("Recent search logged");
+            res.json(results);
           });
           // MongoClient.connect("mongodb://"+process.env.IP+":27017/imgapi",function(err,db){
           //   if(err) throw err;
@@ -86,7 +84,7 @@ router.get("/search/",function(req, res) {
           //   db.close();
           // });
           
-          res.json(results);
+          
         }else{
           res.json({error: 'unable to reach api'});
         }
