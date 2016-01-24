@@ -61,7 +61,7 @@ router.get("/search/",function(req, res) {
       request(baseUrl,{json:true},function(error,response,data){
         if(error===null && response.statusCode===200){
           var results = data.items.map(function(item){
-            // console.log(item);
+            console.log(item);
             return {
               image_url: item.pagemap.cse_image[0].src,
               page_url: item.link,
