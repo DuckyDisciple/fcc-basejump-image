@@ -58,8 +58,12 @@ router.get("/search/",function(req, res) {
       baseUrl += "&cx="+process.env.CX;
       baseUrl += "&key="+process.env.APIKey;
       
-      request(baseUrl,{json:true},function(error,response,data){
-        if(error===null && response.statusCode===200){
+      request({
+        method: 'GET',
+        uri: baseUrl,
+        timeout: 60000,
+        json:true},function(error,response,data){
+        if(!error && response.statusCode == 200){
           var results = data.items.map(function(item){
             console.log(item);
             return {
