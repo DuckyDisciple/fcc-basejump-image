@@ -69,15 +69,31 @@ router.get("/search/",function(req, res) {
           });
           
           //log DB entry
-          var newRecent = Recent({
-            search:term,
-            date:Date.now()
+          Recent.collection.insert({
+            search: term,
+            date: Date.now()
+          },function(err,doc){
+            if(err){
+              throw err;
+            }else{
+              console.log("Recent search saved");
+            }
           });
-          newRecent.save(function(err){
-            if(err) throw err;
-            console.log("Recent search logged");
-            res.json(results);
-          });
+          
+          res.json(results);
+          
+          // var newRecent = Recent({
+          //   search:term,
+          //   date:Date.now()
+          // });
+          
+          // newRecent.save(function(err){
+          //   if(err) throw err;
+          //   console.log("Recent search logged");
+          
+          // });
+          
+          
           // MongoClient.connect("mongodb://"+process.env.IP+":27017/imgapi",function(err,db){
           //   if(err) throw err;
           //   db.collection("recent").insert({"search":term,"date": Date.now()});
