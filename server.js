@@ -61,12 +61,13 @@ router.get("/search/",function(req, res) {
       request(baseUrl,{json:true},function(error,response,data){
         if(error===null && response.statusCode===200){
           var results = data.items.map(function(item){
-            if(item.pagemap.cse_image.length>0){
-            return {
-              image_url: item.pagemap.cse_image[0].src,
-              page_url: item.link,
-              alt_text: item.title
-            };
+            var imageDataArr = item.pagemap.cse_image;
+            if(imageDataArr.length>0){
+              return {
+                image_url: item.pagemap.cse_image[0].src,
+                page_url: item.link,
+                alt_text: item.title
+              };
             }else{
               console.log(item);
               return {
