@@ -60,6 +60,7 @@ router.get("/search/",function(req, res) {
       
       request(baseUrl,{json:true},function(error,response,data){
         if(error===null && response.statusCode===200){
+          res.json(data.items);
           var results = data.items.map(function(item){
             var imageDataArr = item.pagemap.cse_image;
             if(imageDataArr.length>0){
